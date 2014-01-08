@@ -26,7 +26,13 @@ The Flake ID is made up of: `timestamp`, `datacenter`, `worker` and `counter`. E
 +-------------+------------+--------+---------+--------------------+
 ```
 
-As you can see, each Flake ID is 64 bits long, consisting of a 42 bit timestamp, a 5 bit datacenter id (32 unique datacenters), a 5 bit worker id (32 unique workers) and a 12 bit counter. Please note that composition of datacenter id and worker id makes 1024 unique identifiers.
+As you can see, each Flake ID is 64 bits long, consisting of:
+- `timestamp` - 42 bits
+- `datacenter` - 5 bits - 32 unique datacenter ids
+- `worker` - 5 bits - 32 unique workers 
+- `counter` - 12 bits - unique 4096 ids per millisecond 
+
+Please note that composition of `datacenter id` and `worker id` makes 1024 unique service identifiers.
 
 ## Usage ##
 
@@ -37,4 +43,4 @@ Writen by Tom Pawlak - [Blog](http://tompawlak.blogspot.co.uk)
 
 Copyright (c) 2014 Tom Pawlak
 
-MIT License : https://github.com/T-PWK/flake-idgen/blob/master/LICENSE
+MIT License : http://tompawlak.blogspot.com/p/mit.html
