@@ -1,7 +1,9 @@
 Flake ID Generator
 ===========
 
-Flake ID generator yields k-ordered, conflict-free ids in a distributed environment
+Flake ID generator yields k-ordered, conflict-free ids in a distributed environment.
+
+[![NPM](https://nodei.co/npm/flake-idgen.png)](https://nodei.co/npm/flake-idgen/)
 
 ## Flake Numbers ##
 
@@ -79,10 +81,10 @@ It would give something like:
 ```
 
 Flake Id generator constructor takes optional parameter (generator configuration options) with the following properties:
-- `datacenter` - a 5 bit long datacenter identifier. It can have values from 0 to 31.
-- `worker` - a 5 bit long worker identifier. It can have values from 0 to 31.
-- `id` - a 10 bit long gnerator identifier. It can have values from 0 to 1023. It can be provided instead of `datacenter` and `worker` identifiers.
-- `epoch` - number used to reduce value of a generated timestamp. Note that this number should not exceed number of milliseconds elapsed since 1 January 1970 00:00:00 UTC. It can be used to generate _smaller_ ids.
+* `datacenter` - a 5 bit long datacenter identifier. It can have values from 0 to 31.
+* `worker` - a 5 bit long worker identifier. It can have values from 0 to 31.
+* `id` - a 10 bit long gnerator identifier. It can have values from 0 to 1023. It can be provided instead of `datacenter` and `worker` identifiers.
+* `epoch` - number used to reduce value of a generated timestamp. Note that this number should not exceed number of milliseconds elapsed since 1 January 1970 00:00:00 UTC. It can be used to generate _smaller_ ids.
 
 Example of using `datacenter` and `worker` identifiers:
 ```js
