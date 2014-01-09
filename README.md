@@ -32,7 +32,7 @@ As you can see, each Flake ID is 64 bits long, consisting of:
 - `worker` (5 bits) - 32 unique workers in a single datacenter
 - `counter` (12 bits) - 4096 unique ids per millisecond 
 
-Note that composition of `datacenter id` and `worker id` makes 1024 unique service identifiers. By modifying datacenter and worker id we can get up to 1024 id generators on a single machine (e.g. each running in a separate process) or have 1024 machines with a single id generator on each. ???????
+Note that composition of `datacenter id` and `worker id` makes 1024 unique service identifiers. By modifying datacenter and worker id we can get up to 1024 id generators on a single machine (e.g. each running in a separate process) or have 1024 machines with a single id generator on each. It is also possible to provide a single 10 bit long identifier (up to 1024 values). That id is internally split into `datacenter` (the most significant 5 bits) and `worker` (the least significant 5 bits).
 
 ## Usage ##
 
