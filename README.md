@@ -5,7 +5,7 @@ Flake ID generator yields k-ordered, conflict-free ids in a distributed environm
 
 ## Flake Numbers ##
 
-The Flake ID is made up of: `timestamp`, `datacenter`, `worker` and `counter`. Examples in the following table
+The Flake ID is made up of: `timestamp`, `datacenter`, `worker` and `counter`. Examples in the following table: 
 ```
 +-------------+------------+--------+---------+--------------------+
 |  Timestamp  | Datacenter | Worker | Counter | Flake ID           |
@@ -27,12 +27,12 @@ The Flake ID is made up of: `timestamp`, `datacenter`, `worker` and `counter`. E
 ```
 
 As you can see, each Flake ID is 64 bits long, consisting of:
-- `timestamp` - 42 bits
-- `datacenter` - 5 bits - 32 unique datacenter ids
-- `worker` - 5 bits - 32 unique workers 
-- `counter` - 12 bits - unique 4096 ids per millisecond 
+- `timestamp` (42 bits) - number of milliseconds elapsed since 1 January 1970 00:00:00 UTC 
+- `datacenter` (5 bits) - 32 unique datacenter ids
+- `worker` (5 bits) - 32 unique workers in a single datacenter
+- `counter` (12 bits) - 4096 unique ids per millisecond 
 
-Please note that composition of `datacenter id` and `worker id` makes 1024 unique service identifiers.
+Note that composition of `datacenter id` and `worker id` makes 1024 unique service identifiers. By modifying datacenter and worker id we can get up to 1024 id generators on a single machine (e.g. each running in a separate process) or have 1024 machines with a single id generator on each. ???????
 
 ## Usage ##
 
