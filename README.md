@@ -105,7 +105,7 @@ It would give something like:
 
 Example of using `epoch` parameter:
 ```js
-var FlakeId = require('../flake-idgen')
+var FlakeId = require('flake-idgen')
 
 var flakeIdGen1 = new FlakeId();
 var flakeIdGen2 = new FlakeId({epoch:1300000000000});
@@ -119,6 +119,8 @@ It would give something like:
 <Buffer 50 dd db 00 d1 c0 00 00>
 <Buffer 05 32 58 8e d2 40 00 00>
 ```
+
+### Formatting ###
 
 Note that Flake Id generator returns node Buffer representing 64-bit number for the sake of future extensions or returned buffer modifications. Node Buffer can also be very easy converted to the string format. There is a NPM [biguint-format](https://npmjs.org/package/biguint-format) module which provides Buffer to string conversion method e.g.
 
@@ -145,7 +147,7 @@ It would give something like:
 0x5325a4db6000002  // flakeIdGen2 hex format
 ```
 
-Generated id could also be converted to binary string split into 4 digit groups of 0's and 1's e.g.
+Generated id could also be converted to binary string format, split into 4 digit groups of 0's and 1's e.g.
 ```js
 var biguint = require('biguint-format')
 var idGen = new (require('flake-idgen'))
