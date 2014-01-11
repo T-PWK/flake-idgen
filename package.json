@@ -1,6 +1,6 @@
 {
   "name": "flake-idgen",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Flake ID generator yields k-ordered, conflict-free ids in a distributed environment",
   "main": "flake-id-gen.js",
   "scripts": {
@@ -8,8 +8,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/T-PWK/flake-idgen"
+    "url": "https://github.com/T-PWK/flake-idgen.git"
   },
+  "contributors": [],
   "keywords": [
     "id",
     "unique",
@@ -18,8 +19,15 @@
     "flake",
     "distributed"
   ],
-  "author": "Tom Pawlak",
-  "license": "MIT",
+  "author": {
+    "name": "Tom Pawlak",
+    "url": "http://tompawlak.blogspot.com"
+  },
+  "homepage": "https://github.com/T-PWK/flake-idgen",
+  "licenses": [{
+        "type": "MIT",
+        "url": "http://tompawlak.blogspot.com/p/mit.html"
+  }],
   "bugs": {
     "url": "https://github.com/T-PWK/flake-idgen/issues"
   }
