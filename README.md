@@ -81,9 +81,9 @@ It would give something like:
 ```
 
 Flake Id generator constructor takes optional parameter (generator configuration options) with the following properties:
-* `datacenter` - a 5 bit long datacenter identifier. It can have values from 0 to 31.
-* `worker` - a 5 bit long worker identifier. It can have values from 0 to 31.
-* `id` - a 10 bit long gnerator identifier. It can have values from 0 to 1023. It can be provided instead of `datacenter` and `worker` identifiers.
+* `datacenter` (5 bit) - datacenter identifier. It can have values from 0 to 31.
+* `worker` (5 bit) - worker identifier. It can have values from 0 to 31.
+* `id` (10 bit) - gnerator identifier. It can have values from 0 to 1023. It can be provided instead of `datacenter` and `worker` identifiers.
 * `epoch` - number used to reduce value of a generated timestamp. Note that this number should not exceed number of milliseconds elapsed since 1 January 1970 00:00:00 UTC. It can be used to generate _smaller_ ids.
 
 Example of using `datacenter` and `worker` identifiers:
@@ -120,7 +120,7 @@ It would give something like:
 <Buffer 05 32 58 8e d2 40 00 00>
 ```
 
-Note that Flake Id generator returns node Buffer representing 64 bit number for the sake of future extensions or returned buffer modifications. Node Buffer can also be very easy converted to the string format. There is a NPM [biguint-format](https://npmjs.org/package/biguint-format) Node.js module which provides Buffer to string conversion means e.g.
+Note that Flake Id generator returns node Buffer representing 64-bit number for the sake of future extensions or returned buffer modifications. Node Buffer can also be very easy converted to the string format. There is a NPM [biguint-format](https://npmjs.org/package/biguint-format) module which provides Buffer to string conversion method e.g.
 
 ```js
 var biguint = require('biguint-format')
@@ -130,19 +130,38 @@ var flakeIdGen1 = new FlakeId();
 var flakeIdGen2 = new FlakeId({epoch:1300000000000});
 
 console.info(biguint.format(flakeIdGen1.next(), 'dec'));
-console.info(biguint.format(flakeIdGen1.next(), 'hex'));
+console.info(biguint.format(flakeIdGen1.next(), 'hex', {prefix:'0x'}));
 
 console.info(biguint.format(flakeIdGen2.next(), 'dec'));
-console.info(biguint.format(flakeIdGen2.next(), 'hex'));
+console.info(biguint.format(flakeIdGen2.next(), 'hex', {prefix:'0x'}));
 ```
 
-It would something like:
+It would give something like:
 ```js
 5827056208820830208 // flakeIdGen1 decimal format
-50dddcbfb5c00001    // flakeIdGen1 hex format
+0x50dddcbfb5c00001  // flakeIdGen1 hex format
 
 374461008833413120 // flakeIdGen2 decimal format
-5325a4db6000002    // flakeIdGen2 hex format
+0x5325a4db6000002  // flakeIdGen2 hex format
+```
+
+Generated id could also be converted to binary string split into 4 digit groups of 0's and 1's e.g.
+```js
+var biguint = require('biguint-format')
+var idGen = new (require('flake-idgen'))
+
+for (var i = 0; i < 5; i++) {
+	console.info(biguint.format(idGen.next(), 'bin', {groupsize:4}));
+};
+```
+
+It would give something like:
+```js
+0101 0000 1101 1111 1011 0110 0001 0101 1100 0001 0100 0000 0000 0000 0000 0000 // 0x50 df b6 15 c1 40 00 00
+0101 0000 1101 1111 1011 0110 0001 0101 1100 0101 0000 0000 0000 0000 0000 0000 // 0x50 df b6 15 c5 00 00 00
+0101 0000 1101 1111 1011 0110 0001 0101 1100 0101 0000 0000 0000 0000 0000 0001 // 0x50 df b6 15 c5 00 00 01
+0101 0000 1101 1111 1011 0110 0001 0101 1100 0101 0100 0000 0000 0000 0000 0000 // 0x50 df b6 15 c5 40 00 00
+0101 0000 1101 1111 1011 0110 0001 0101 1100 0101 0100 0000 0000 0000 0000 0001 // 0x50 df b6 15 c5 40 00 01
 ```
 
 ## Author ##
