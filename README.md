@@ -5,6 +5,8 @@ Flake ID generator yields k-ordered, conflict-free ids in a distributed environm
 
 [![NPM](https://nodei.co/npm/flake-idgen.png)](https://nodei.co/npm/flake-idgen/)
 
+[![Build Status](https://travis-ci.org/T-PWK/flake-idgen.png?branch=master)](https://travis-ci.org/T-PWK/flake-idgen)
+
 ## Flake Numbers ##
 
 The Flake ID is made up of: `timestamp`, `datacenter`, `worker` and `counter`. Examples in the following table: 
