@@ -1,11 +1,9 @@
-Flake ID Generator
+Flake ID Generator [![Build Status](https://travis-ci.org/T-PWK/flake-idgen.png?branch=master)](https://travis-ci.org/T-PWK/flake-idgen)
 ===========
 
 Flake ID generator yields k-ordered, conflict-free ids in a distributed environment.
 
 [![NPM](https://nodei.co/npm/flake-idgen.png)](https://nodei.co/npm/flake-idgen/)
-
-[![Build Status](https://travis-ci.org/T-PWK/flake-idgen.png?branch=master)](https://travis-ci.org/T-PWK/flake-idgen)
 
 ## Flake Numbers ##
 
