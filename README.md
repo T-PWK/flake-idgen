@@ -1,9 +1,8 @@
-Flake ID Generator [![Build Status](https://travis-ci.org/T-PWK/flake-idgen.png?branch=master)](https://travis-ci.org/T-PWK/flake-idgen)
+Flake ID Generator 
 ===========
+[![Build Status](https://travis-ci.org/T-PWK/flake-idgen.png?branch=master)](https://travis-ci.org/T-PWK/flake-idgen) [![NPM version](https://badge.fury.io/js/flake-idgen.png)](http://badge.fury.io/js/flake-idgen)
 
 Flake ID generator yields k-ordered, conflict-free ids in a distributed environment.
-
-[![NPM](https://nodei.co/npm/flake-idgen.png)](https://nodei.co/npm/flake-idgen/)
 
 ## Flake Numbers ##
 
@@ -177,10 +176,10 @@ It would give something like:
 ```
 
 ## Author ##
-Writen by Tom Pawlak - [Blog](http://tompawlak.blogspot.co.uk)
+Writen by Tom Pawlak - [Blog](http://blog.tompawlak.org)
 
 ## License ##
 
 Copyright (c) 2014 Tom Pawlak
 
-MIT License : http://tompawlak.blogspot.com/p/mit.html
+MIT License : http://blog.tompawlak.org/p/mit.html
