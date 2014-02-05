@@ -100,7 +100,7 @@ Example of using `datacenter` and `worker` identifiers:
 var FlakeId = require('flake-idgen')
 
 var flakeIdGen1 = new FlakeId();
-var flakeIdGen2 = new FlakeId({datacenter:9, worker:7});
+var flakeIdGen2 = new FlakeId({ datacenter: 9, worker: 7 });
 
 console.info(flakeIdGen1.next());
 console.info(flakeIdGen2.next());
@@ -117,7 +117,7 @@ Example of using `epoch` parameter:
 var FlakeId = require('flake-idgen')
 
 var flakeIdGen1 = new FlakeId();
-var flakeIdGen2 = new FlakeId({epoch:1300000000000});
+var flakeIdGen2 = new FlakeId({ epoch: 1300000000000 });
 
 console.info(flakeIdGen1.next());
 console.info(flakeIdGen2.next());
@@ -131,20 +131,20 @@ It would give something like:
 
 ### Formatting ###
 
-Note that Flake Id generator returns node Buffer representing 64-bit number for the sake of future extensions or returned buffer modifications. Node Buffer can also be very easy converted to the string format. There is a NPM [biguint-format](https://npmjs.org/package/biguint-format) module which provides Buffer to string conversion method e.g.
+Flake Id generator returns node Buffer representing 64-bit number for the sake of future extensions or returned buffer modifications. Node Buffer can also be very easily converted to string format. There is a NPM [biguint-format](https://npmjs.org/package/biguint-format) module which provides Buffer to string conversion functionality e.g.
 
 ```js
-var biguint = require('biguint-format')
-var FlakeId = require('flake-idgen')
+var intformat = require('biguint-format')
+    , FlakeId = require('flake-idgen')
 
 var flakeIdGen1 = new FlakeId();
-var flakeIdGen2 = new FlakeId({epoch:1300000000000});
+var flakeIdGen2 = new FlakeId({ epoch: 1300000000000 });
 
-console.info(biguint.format(flakeIdGen1.next(), 'dec'));
-console.info(biguint.format(flakeIdGen1.next(), 'hex', {prefix:'0x'}));
+console.info(intformat(flakeIdGen1.next(), 'dec'));
+console.info(intformat(flakeIdGen1.next(), 'hex', { prefix: '0x' }));
 
-console.info(biguint.format(flakeIdGen2.next(), 'dec'));
-console.info(biguint.format(flakeIdGen2.next(), 'hex', {prefix:'0x'}));
+console.info(intformat(flakeIdGen2.next(), 'dec'));
+console.info(intformat(flakeIdGen2.next(), 'hex', { prefix: '0x' }));
 ```
 
 It would give something like:
@@ -158,11 +158,11 @@ It would give something like:
 
 Generated id could also be converted to binary string format, split into 4 digit groups of 0's and 1's e.g.
 ```js
-var biguint = require('biguint-format')
-var idGen = new (require('flake-idgen'))
+var foramt = require('biguint-format')
+    , idGen = new (require('flake-idgen'))
 
 for (var i = 0; i < 5; i++) {
-	console.info(biguint.format(idGen.next(), 'bin', {groupsize:4}));
+	console.info(format(idGen.next(), 'bin', { groupsize: 4 }));
 };
 ```
 
