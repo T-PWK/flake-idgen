@@ -2,7 +2,6 @@
     "use strict";
 
     var assert  = require('assert'),
-        format  = require('biguint-format'),
         FlakeId = require('./flake-id-gen'),
         idGen1  = new FlakeId();
 
@@ -12,7 +11,7 @@
         var ids = new Array(1000), i;
 
         for(i = 0; i < ids.length; i++) {
-            ids[i] = format(generator.next(), 'dec');
+            ids[i] = generator.next().toString('hex');
         }
 
         for(i = 0; i < ids.length - 1; i++) {
