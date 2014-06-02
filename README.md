@@ -182,4 +182,4 @@ Writen by Tom Pawlak - [Blog](http://blog.tompawlak.org)
 
 Copyright (c) 2014 Tom Pawlak
 
-MIT License : http://blog.tompawlak.org/p/mit.html
+MIT License : http://blog.tompawlak.org/mit-license
