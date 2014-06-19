@@ -1,0 +1,251 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Flake-idgen by T-PWK</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Flake-idgen</h1>
+        <p class="header">Flake ID generator yields k-ordered, conflict-free ids in a distributed environment</p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/T-PWK/flake-idgen/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/T-PWK/flake-idgen/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/T-PWK/flake-idgen">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/T-PWK">T-PWK</a></p>
+
+
+      </header>
+      <section>
+        <h1>
+<a name="flake-id-generator-" class="anchor" href="#flake-id-generator-"><span class="octicon octicon-link"></span></a>Flake ID Generator </h1>
+
+<p><a href="https://travis-ci.org/T-PWK/flake-idgen"><img src="https://travis-ci.org/T-PWK/flake-idgen.png?branch=master" alt="Build Status"></a> <a href="http://badge.fury.io/js/flake-idgen"><img src="https://badge.fury.io/js/flake-idgen.png" alt="NPM version"></a></p>
+
+<p>Flake ID generator yields k-ordered, conflict-free ids in a distributed environment.</p>
+
+<h2>
+<a name="flake-numbers" class="anchor" href="#flake-numbers"><span class="octicon octicon-link"></span></a>Flake Numbers</h2>
+
+<p>The Flake ID is made up of: <code>timestamp</code>, <code>datacenter</code>, <code>worker</code> and <code>counter</code>. Examples in the following table: </p>
+
+<pre><code>+-------------+------------+--------+---------+--------------------+
+|  Timestamp  | Datacenter | Worker | Counter | Flake ID           |
++-------------+------------+--------+---------+--------------------+
+| 0x8c20543b0 |   00000b   | 00000b |  0x000  | 0x02308150ec000000 |
++-------------+------------+--------+---------+--------------------+
+| 0x8c20543b1 |   00000b   | 00000b |  0x000  | 0x02308150ec400000 |
++-------------+------------+--------+---------+--------------------+
+| 0x8c20543b1 |   00000b   | 00000b |  0x001  | 0x02308150ec400001 |
++-------------+------------+--------+---------+--------------------+
+| 0x8c20543b1 |   00000b   | 00000b |  0x002  | 0x02308150ec400002 |
++-------------+------------+--------+---------+--------------------+
+| 0x8c20543b1 |   00000b   | 00000b |  0x003  | 0x02308150ec400003 |
++-------------+------------+--------+---------+--------------------+
+| 0x8c20c0335 |   00011b   | 00001b |  0x000  | 0x02308300cd461000 |
++-------------+------------+--------+---------+--------------------+
+| 0x8c20c0335 |   00011b   | 00001b |  0x001  | 0x02308300cd461001 |
++-------------+------------+--------+---------+--------------------+
+</code></pre>
+
+<p>As you can see, each Flake ID is 64 bits long, consisting of:</p>
+
+<ul>
+<li>
+<code>timestamp</code>, a 42 bit long number of milliseconds elapsed since 1 January 1970 00:00:00 UTC </li>
+<li>
+<code>datacenter</code>, a 5 bit long datacenter identifier. It can take up to 32 unique values (including 0)</li>
+<li>
+<code>worker</code>, a 5 bit long worker indentifier. It can take up to 32 unique values (including 0)</li>
+<li>
+<code>counter</code>, a 12 bit long counter of ids in the same millisecond. It can take up to 4096 unique values. </li>
+</ul><p>Breakdown of bits for an id e.g. <code>5828128208445124608</code> (counter is <code>0</code>, datacenter is <code>7</code> and worker <code>3</code>) is as follows:</p>
+
+<pre><code> 010100001110000110101011101110100001000111 00111 00011 000000000000
+                                                       |------------| 12 bit counter
+                                                 |-----|               5 bit worker
+                                           |-----|                     5 bit datacenter
+                                           |----- -----|              10 bit generator identifier
+|------------------------------------------|                          42 bit timestamp
+</code></pre>
+
+<p>Note that composition of <code>datacenter id</code> and <code>worker id</code> makes 1024 unique generator identifiers. By modifying datacenter and worker id we can get up to 1024 id generators on a single machine (e.g. each running in a separate process) or have 1024 machines with a single id generator on each. It is also possible to provide a single 10 bit long identifier (up to 1024 values). That id is internally split into <code>datacenter</code> (the most significant 5 bits) and <code>worker</code> (the least significant 5 bits).</p>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>Flake ID Generator returns 8 byte long node <a href="http://nodejs.org/api/buffer.html">Buffer</a> objects with its bytes representing 64 bit long id. Note that the number is stored in Big Endian format i.e. the most significant byte of the number is stored in the smallest address given and the least significant byte is stored in the largest.</p>
+
+<p>Flake id generator instace has one method <code>next(cb)</code> returning generated id (if a callback function is not provided) or calling provided callback function with two arguments: <code>error</code> and <code>generated id</code>.</p>
+
+<p>The following example uses <code>next</code> with no callback function:</p>
+
+<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">FlakeId</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'flake-idgen'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">flakeIdGen</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FlakeId</span><span class="p">();</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">flakeIdGen</span><span class="p">.</span><span class="nx">next</span><span class="p">());</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">flakeIdGen</span><span class="p">.</span><span class="nx">next</span><span class="p">());</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">flakeIdGen</span><span class="p">.</span><span class="nx">next</span><span class="p">());</span>
+</pre></div>
+
+<p>It would give something like:</p>
+
+<pre><code>&lt;Buffer 50 dd d5 99 01 c0 00 00&gt;
+&lt;Buffer 50 dd d5 99 02 80 00 00&gt;
+&lt;Buffer 50 dd d5 99 02 80 00 01&gt;
+</code></pre>
+
+<p>The following example uses <code>next</code> with callback function:</p>
+
+<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">FlakeId</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'flake-idgen'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">flakeIdGen</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FlakeId</span><span class="p">();</span>
+
+<span class="nx">flakeIdGen</span><span class="p">.</span><span class="nx">next</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+     <span class="nx">console</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
+<span class="p">})</span>
+
+<span class="nx">flakeIdGen</span><span class="p">.</span><span class="nx">next</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+     <span class="nx">console</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
+<span class="p">})</span>
+</pre></div>
+
+<p>It would give something like:</p>
+
+<pre><code>&lt;Buffer 50 dd d6 49 ef c0 00 00&gt;
+&lt;Buffer 50 dd d6 49 f0 00 00 00&gt;
+</code></pre>
+
+<p>Flake Id generator constructor takes optional parameter (generator configuration options) with the following properties:</p>
+
+<ul>
+<li>
+<code>datacenter</code> (5 bit) - datacenter identifier. It can have values from 0 to 31.</li>
+<li>
+<code>worker</code> (5 bit) - worker identifier. It can have values from 0 to 31.</li>
+<li>
+<code>id</code> (10 bit) - gnerator identifier. It can have values from 0 to 1023. It can be provided instead of <code>datacenter</code> and <code>worker</code> identifiers.</li>
+<li>
+<code>epoch</code> - number used to reduce value of a generated timestamp. Note that this number should not exceed number of milliseconds elapsed since 1 January 1970 00:00:00 UTC. It can be used to generate <em>smaller</em> ids.</li>
+</ul><p>Example of using <code>datacenter</code> and <code>worker</code> identifiers:</p>
+
+<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">FlakeId</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'flake-idgen'</span><span class="p">)</span>
+
+<span class="kd">var</span> <span class="nx">flakeIdGen1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FlakeId</span><span class="p">();</span>
+<span class="kd">var</span> <span class="nx">flakeIdGen2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FlakeId</span><span class="p">({</span> <span class="nx">datacenter</span><span class="o">:</span> <span class="mi">9</span><span class="p">,</span> <span class="nx">worker</span><span class="o">:</span> <span class="mi">7</span> <span class="p">});</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="nx">flakeIdGen1</span><span class="p">.</span><span class="nx">next</span><span class="p">());</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="nx">flakeIdGen2</span><span class="p">.</span><span class="nx">next</span><span class="p">());</span>
+</pre></div>
+
+<p>It would give something like:</p>
+
+<pre><code>&lt;Buffer 50 dd da 8f 43 40 00 00&gt;
+&lt;Buffer 50 dd da 8f 43 d2 70 00&gt;
+</code></pre>
+
+<p>Example of using <code>epoch</code> parameter:</p>
+
+<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">FlakeId</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'flake-idgen'</span><span class="p">)</span>
+
+<span class="kd">var</span> <span class="nx">flakeIdGen1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FlakeId</span><span class="p">();</span>
+<span class="kd">var</span> <span class="nx">flakeIdGen2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FlakeId</span><span class="p">({</span> <span class="nx">epoch</span><span class="o">:</span> <span class="mi">1300000000000</span> <span class="p">});</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="nx">flakeIdGen1</span><span class="p">.</span><span class="nx">next</span><span class="p">());</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="nx">flakeIdGen2</span><span class="p">.</span><span class="nx">next</span><span class="p">());</span>
+</pre></div>
+
+<p>It would give something like:</p>
+
+<pre><code>&lt;Buffer 50 dd db 00 d1 c0 00 00&gt;
+&lt;Buffer 05 32 58 8e d2 40 00 00&gt;
+</code></pre>
+
+<h3>
+<a name="formatting" class="anchor" href="#formatting"><span class="octicon octicon-link"></span></a>Formatting</h3>
+
+<p>Flake Id generator returns node Buffer representing 64-bit number for the sake of future extensions or returned buffer modifications. Node Buffer can also be very easily converted to string format. There is a NPM <a href="https://npmjs.org/package/biguint-format">biguint-format</a> module which provides Buffer to string conversion functionality e.g.</p>
+
+<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">intformat</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'biguint-format'</span><span class="p">)</span>
+    <span class="p">,</span> <span class="nx">FlakeId</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'flake-idgen'</span><span class="p">)</span>
+
+<span class="kd">var</span> <span class="nx">flakeIdGen1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FlakeId</span><span class="p">();</span>
+<span class="kd">var</span> <span class="nx">flakeIdGen2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FlakeId</span><span class="p">({</span> <span class="nx">epoch</span><span class="o">:</span> <span class="mi">1300000000000</span> <span class="p">});</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="nx">intformat</span><span class="p">(</span><span class="nx">flakeIdGen1</span><span class="p">.</span><span class="nx">next</span><span class="p">(),</span> <span class="s1">'dec'</span><span class="p">));</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="nx">intformat</span><span class="p">(</span><span class="nx">flakeIdGen1</span><span class="p">.</span><span class="nx">next</span><span class="p">(),</span> <span class="s1">'hex'</span><span class="p">,</span> <span class="p">{</span> <span class="nx">prefix</span><span class="o">:</span> <span class="s1">'0x'</span> <span class="p">}));</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="nx">intformat</span><span class="p">(</span><span class="nx">flakeIdGen2</span><span class="p">.</span><span class="nx">next</span><span class="p">(),</span> <span class="s1">'dec'</span><span class="p">));</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="nx">intformat</span><span class="p">(</span><span class="nx">flakeIdGen2</span><span class="p">.</span><span class="nx">next</span><span class="p">(),</span> <span class="s1">'hex'</span><span class="p">,</span> <span class="p">{</span> <span class="nx">prefix</span><span class="o">:</span> <span class="s1">'0x'</span> <span class="p">}));</span>
+</pre></div>
+
+<p>It would give something like:</p>
+
+<div class="highlight highlight-js"><pre><span class="mi">5827056208820830208</span> <span class="c1">// flakeIdGen1 decimal format</span>
+<span class="mh">0x50dddcbfb5c00001</span>  <span class="c1">// flakeIdGen1 hex format</span>
+
+<span class="mi">374461008833413120</span> <span class="c1">// flakeIdGen2 decimal format</span>
+<span class="mh">0x5325a4db6000002</span>  <span class="c1">// flakeIdGen2 hex format</span>
+</pre></div>
+
+<p>Generated id could also be converted to binary string format, split into 4 digit groups of 0's and 1's e.g.</p>
+
+<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">foramt</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'biguint-format'</span><span class="p">)</span>
+    <span class="p">,</span> <span class="nx">idGen</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">'flake-idgen'</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="nx">format</span><span class="p">(</span><span class="nx">idGen</span><span class="p">.</span><span class="nx">next</span><span class="p">(),</span> <span class="s1">'bin'</span><span class="p">,</span> <span class="p">{</span> <span class="nx">groupsize</span><span class="o">:</span> <span class="mi">4</span> <span class="p">}));</span>
+<span class="p">};</span>
+</pre></div>
+
+<p>It would give something like:</p>
+
+<div class="highlight highlight-js"><pre><span class="mi">0101</span> <span class="mi">0000</span> <span class="mi">1101</span> <span class="mi">1111</span> <span class="mi">1011</span> <span class="mi">0110</span> <span class="mi">0001</span> <span class="mi">0101</span> <span class="mi">1100</span> <span class="mi">0001</span> <span class="mi">0100</span> <span class="mi">0000</span> <span class="mi">0000</span> <span class="mi">0000</span> <span class="mi">0000</span> <span class="mi">0000</span> <span class="c1">// 0x50 df b6 15 c1 40 00 00</span>
+<span class="mi">0101</span> <span class="mi">0000</span> <span class="mi">1101</span> <span class="mi">1111</span> <span class="mi">1011</span> <span class="mi">0110</span> <span class="mi">0001</span> <span class="mi">0101</span> <span class="mi">1100</span> <span class="mi">0101</span> <span class="mi">0000</span> <span class="mi">0000</span> <span class="mi">0000</span> <span class="mi">0000</span> <span class="mi">0000</span> <span class="mi">0000</span> <span class="c1">// 0x50 df b6 15 c5 00 00 00</span>
+<span class="mi">0101</span> <span class="mi">0000</span> <span class="mi">1101</span> <span class="mi">1111</span> <span class="mi">1011</span> <span class="mi">0110</span> <span class="mi">0001</span> <span class="mi">0101</span> <span class="mi">1100</span> <span class="mi">0101</span> <span class="mi">0000</span> <span class="mi">0000</span> <span class="mi">0000</span> <span class="mi">0000</span> <span class="mi">0000</span> <span class="mi">0001</span> <span class="c1">// 0x50 df b6 15 c5 00 00 01</span>
+<span class="mi">0101</span> <span class="mi">0000</span> <span class="mi">1101</span> <span class="mi">1111</span> <span class="mi">1011</span> <span class="mi">0110</span> <span class="mi">0001</span> <span class="mi">0101</span> <span class="mi">1100</span> <span class="mi">0101</span> <span class="mi">0100</span> <span class="mi">0000</span> <span class="mi">0000</span> <span class="mi">0000</span> <span class="mi">0000</span> <span class="mi">0000</span> <span class="c1">// 0x50 df b6 15 c5 40 00 00</span>
+<span class="mi">0101</span> <span class="mi">0000</span> <span class="mi">1101</span> <span class="mi">1111</span> <span class="mi">1011</span> <span class="mi">0110</span> <span class="mi">0001</span> <span class="mi">0101</span> <span class="mi">1100</span> <span class="mi">0101</span> <span class="mi">0100</span> <span class="mi">0000</span> <span class="mi">0000</span> <span class="mi">0000</span> <span class="mi">0000</span> <span class="mi">0001</span> <span class="c1">// 0x50 df b6 15 c5 40 00 01</span>
+</pre></div>
+
+<h2>
+<a name="author" class="anchor" href="#author"><span class="octicon octicon-link"></span></a>Author</h2>
+
+<p>Writen by Tom Pawlak - <a href="http://blog.tompawlak.org">Blog</a></p>
+
+<h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>Copyright (c) 2014 Tom Pawlak</p>
+
+<p>MIT License : <a href="http://blog.tompawlak.org/mit-license">http://blog.tompawlak.org/mit-license</a></p>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="http://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		          <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-52086748-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
