@@ -1,6 +1,6 @@
 Flake ID Generator 
 ===========
-[![Build Status](https://travis-ci.org/T-PWK/flake-idgen.png?branch=master)](https://travis-ci.org/T-PWK/flake-idgen) [![NPM version](https://badge.fury.io/js/flake-idgen.png)](http://badge.fury.io/js/flake-idgen)
+[![Build Status](https://travis-ci.org/T-PWK/flake-idgen.png?branch=master)](https://travis-ci.org/T-PWK/flake-idgen) [![NPM version](https://badge.fury.io/js/flake-idgen.png)](http://badge.fury.io/js/flake-idgen) [![Dependency Status](https://gemnasium.com/T-PWK/biguint-format.svg)](https://gemnasium.com/T-PWK/biguint-format)
 
 Flake ID generator yields k-ordered, conflict-free ids in a distributed environment.
 
