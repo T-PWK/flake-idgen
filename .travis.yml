@@ -5,8 +5,5 @@ node_js:
   - 0.11
 notifications:
   email: false
-addons:
-  code_climate:
-    repo_token: hJG9rRGiGmdH55VkaGkbaovmAd9heKNyi
-after_script:
-  - cat lcov.info | codeclimate
+install:
+  - npm install istanbul -g
