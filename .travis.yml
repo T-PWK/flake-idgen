@@ -7,3 +7,6 @@ notifications:
   email: false
 install:
   - npm install istanbul -g
+  - npm install coveralls -g
+after_success:
+  - istanbul cover test.js --report lcovonly && cat ./coverage/lcov.info | coveralls
