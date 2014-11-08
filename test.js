@@ -55,7 +55,7 @@
               assert.ifError(err);
               ids[index++] = id.toString('hex');
 
-              if(index == ids.length) {
+              if(index === ids.length) {
                 for(i = 0; i < ids.length - 1; i++) {
                     assert.notEqual(ids[i], ids[i+1]);      // Two sibling ids are not equal
                     assert.ok(ids[i] < ids[i+1]);           // Each id is greater than an id generated before

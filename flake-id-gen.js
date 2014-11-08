@@ -9,9 +9,10 @@
 
         // Set generator id from 'id' option or combination of 'datacenter' and 'worker'
         if (typeof this.options.id !== 'undefined') {
+            /*jslint bitwise: true */
             this.id = this.options.id & 0x3FF;
         } else {
-            this.id = ((this.options.datacenter || 0) & 0x1F) << 5 | ((this.options.worker || 0) & 0x1F)
+            this.id = ((this.options.datacenter || 0) & 0x1F) << 5 | ((this.options.worker || 0) & 0x1F);
         }
         this.id <<= 12;  // id generator identifier - will not change while generating ids
         this.epoch = +this.options.epoch || 0;
@@ -40,6 +41,7 @@
                 }
 
                 // Increase sequence counter
+                /*jslint bitwise: true */
                 this.seq = (this.seq + 1) & this.seqMask;
 
                 // sequence counter exceeded its max value (4095)
