@@ -1,6 +1,6 @@
 Flake ID Generator 
 ===========
-[![Build Status](https://travis-ci.org/T-PWK/flake-idgen.png?branch=master)](https://travis-ci.org/T-PWK/flake-idgen) [![NPM version](https://badge.fury.io/js/flake-idgen.png)](http://badge.fury.io/js/flake-idgen) [![Dependency Status](https://gemnasium.com/T-PWK/biguint-format.svg)](https://gemnasium.com/T-PWK/biguint-format) [![Coverage Status](https://coveralls.io/repos/T-PWK/flake-idgen/badge.png)](https://coveralls.io/r/T-PWK/flake-idgen)
+[![Build Status](https://travis-ci.org/T-PWK/flake-idgen.png?branch=master)](https://travis-ci.org/T-PWK/flake-idgen) [![NPM version](https://badge.fury.io/js/flake-idgen.png)](http://badge.fury.io/js/flake-idgen) [![Dependency Status](https://gemnasium.com/T-PWK/biguint-format.svg)](https://gemnasium.com/T-PWK/biguint-format) [![Code Climate](https://codeclimate.com/github/T-PWK/flake-idgen/badges/gpa.svg)](https://codeclimate.com/github/T-PWK/flake-idgen) [![Test Coverage](https://codeclimate.com/github/T-PWK/flake-idgen/badges/coverage.svg)](https://codeclimate.com/github/T-PWK/flake-idgen)
 
 Flake ID generator yields k-ordered, conflict-free ids in a distributed environment.
 
