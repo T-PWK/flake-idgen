@@ -18,6 +18,7 @@
         this.seq = 0;
         this.lastTime = 0;
         this.overflow = false;
+        this.seqMask = this.options.seqMask || 0xFFF;
     };
 
     FlakeId.POW10 = Math.pow(2, 10); // 2 ^ 10
@@ -44,7 +45,7 @@
                 }
 
                 // Increase sequence counter
-                this.seq = (this.seq + 1) & 0xFFF;
+                this.seq = (this.seq + 1) & this.seqMask;
 
                 // sequence counter exceeded its max value (4095)
                 // - set overflow flag and wait till next millisecond
