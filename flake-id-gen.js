@@ -35,13 +35,8 @@
                 // If all sequence values (4096 unique values including 0) have been used
                 // to generate ids in the current millisecond (overflow is true) wait till next millisecond
                 if (this.overflow) {
-                    if (cb) {
-                        setTimeout(this.next.bind(this, cb), 1);
-                        return;
-                    }
-                    else {
-                        throw new Error('Sequence exceeded its maximum value. Provide callback function to handle sequence overflow');
-                    }
+                    overflowCond(this, cb);
+                    return;
                 }
 
                 // Increase sequence counter
@@ -51,13 +46,8 @@
                 // - set overflow flag and wait till next millisecond
                 if (this.seq === 0) {
                     this.overflow = true;
-                    if (cb) {
-                        setTimeout(this.next.bind(this, cb), 1);
-                        return;
-                    }
-                    else {
-                        throw new Error('Sequence exceeded its maximum value. Provide callback function to handle sequence overflow');
-                    }
+                    overflowCond(this, cb);
+                    return;
                 }
             } else {
                 this.overflow = false;
@@ -78,5 +68,15 @@
             }
         }
     };
+
+  function overflowCond(self, cb) {
+    if (cb) {
+        setTimeout(self.next.bind(self, cb), 1);
+    }
+    else {
+        throw new Error('Sequence exceeded its maximum value. Provide callback function to handle sequence overflow');
+    }
+  }
+
 
 }());
