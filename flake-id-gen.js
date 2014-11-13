@@ -4,6 +4,17 @@
 (function () {
     "use strict";
 
+    /**
+     * Represents an ID generator.
+     * @exports FlakeId
+     * @constructor
+     * @param {object=} options - Generator options
+     * @param {Number} options.id - Generator identifier. It can have values from 0 to 1023. It can be provided instead of <tt>datacenter</tt> and <tt>worker</tt> identifiers.
+     * @param {Number} options.datacenter - Datacenter identifier. It can have values from 0 to 31.
+     * @param {Number} options.worker - Worker identifier. It can have values from 0 to 31.
+     * @param {Number} options.epoch - Number used to reduce value of a generated timestamp.
+     * @param {Number} options.seqMask
+     */
     var FlakeId = module.exports = function (options) {
         this.options = options || {};
 
@@ -26,7 +37,20 @@
     FlakeId.POW26 = Math.pow(2, 26); // 2 ^ 26
 
     FlakeId.prototype = {
+      /**
+       * Generates conflice-free id
+       * @param {cb=} callback The callback that handles the response.
+       * @returns {Buffer} Generated id if callback is not provided
+       * @exception if a sequence exceeded its maximum value and a callback function is not provided
+       */
         next: function (cb) {
+          /**
+           * This callback receives generated id
+           * @callback callback
+           * @param {Error} error - Error occurred during id generation
+           * @param {Buffer} id - Generated id
+           */
+
             var id = new Buffer(8), time = Date.now() - this.epoch;
             id.fill(0);
 
