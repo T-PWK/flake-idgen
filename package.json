@@ -4,7 +4,7 @@
   "description": "Flake ID generator yields k-ordered, conflict-free ids in a distributed environment",
   "main": "flake-id-gen.js",
   "scripts": {
-    "test": "node test.js"
+    "test": "istanbul cover _mocha --report lcovonly"
   },
   "repository": {
     "type": "git",
@@ -32,5 +32,8 @@
   ],
   "bugs": {
     "url": "https://github.com/T-PWK/flake-idgen/issues"
+  },
+  "devDependencies": {
+    "mocha": "^2.0.1"
   }
 }
