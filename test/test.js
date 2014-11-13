@@ -11,6 +11,7 @@ describe('FlakeId', function () {
         it('should return unique id when callback is not present', function () {
             testSynch(idGen, 1000);
         });
+        
         it('should return unique ids when callback is present', function () {
             this.slow(200);
             testWithCallback(idGen, 5000);
@@ -26,6 +27,7 @@ describe('FlakeId({id:0x100})', function () {
         it('should return unique id when callback is not present', function () {
             testSynch(idGen, 1000);
         });
+        
         it('should return unique ids when callback is present', function () {
             this.slow(200);
             testWithCallback(idGen, 5000);
@@ -42,9 +44,16 @@ describe('FlakeId({seqMask:0x0F})', function () {
             // Maximum unique ids depends on seqMask - 16 in this case
             testSynch(idGen, 16);
         });
+        
         it('should return unique ids when callback is present', function () {
             this.slow(200);
             testWithCallback(idGen, 1000);
+        });
+
+        it('should throw an exception if counter has been exceeded and callback is not present', function () {
+            assert.throws(function () {
+                testSynch(idGen, 100);
+            });
         });
     });
 });
