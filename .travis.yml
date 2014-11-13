@@ -6,9 +6,8 @@ node_js:
 notifications:
   email: false
 install:
-  - npm install istanbul -g
-  - npm install mocha -g
-  - npm install codeclimate-test-reporter -g
+  - npm install -g istanbul
+  - npm install -g mocha
+  - npm install -g codeclimate-test-reporter
 after_success:
-  - istanbul cover _mocha --report lcovonly
   - CODECLIMATE_REPO_TOKEN=21f22d9d5941a54b1a028f91a7fc75f1104c514d4f05df6a8095777d2ee58ada codeclimate < coverage/lcov.info
