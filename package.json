@@ -1,6 +1,6 @@
 {
   "name": "flake-idgen",
-  "version": "0.1.4",
+  "version": "1.0.0",
   "description": "Flake ID generator yields k-ordered, conflict-free ids in a distributed environment",
   "main": "flake-id-gen.js",
   "scripts": {
