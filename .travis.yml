@@ -1,13 +1,17 @@
+sudo: false
 language: node_js
 node_js:
-  - 0.8
-  - 0.10
-  - 0.11
+  - "5.4.1"
+cache:
+  directories:
+    - node_modules
+script: "npm run-script test-travis"
+after_script:
+  - "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+  - "cat ./coverage/lcov.info | ./node_modules/codeclimate-test-reporter/bin/codeclimate.js"
+addons:
+    code_climate:
+        repo_token: d7937204e661b4d8ac910b62cb2358a98b419a5e71c23b5e876c70eeee6fec93
 notifications:
-  email: false
-install:
-  - npm install -g istanbul
-  - npm install -g mocha
-  - npm install -g codeclimate-test-reporter
-after_success:
-  - CODECLIMATE_REPO_TOKEN=21f22d9d5941a54b1a028f91a7fc75f1104c514d4f05df6a8095777d2ee58ada codeclimate < coverage/lcov.info
+  email:
+    - nicolas@luxe.com

@@ -1,90 +1,41 @@
-"use strict";
+'use strict';
 
-var assert  = require('assert'),
-    FlakeId = require('../flake-id-gen');
+const FlakeId = require('../');
+const sinon = require('sinon');
+const biguintformat = require('biguint-format');
 
-describe('FlakeId', function () {
+describe('flake-idgen-63', function () {
+  let clock;
 
-    var idGen = new FlakeId();
+  beforeEach(function () {
+    const date = new Date(2013, 3, 1);
+    clock = sinon.useFakeTimers(date.getTime());
+  });
 
-    describe('next', function () {
-        it('should return unique id when callback is not present', function () {
-            testSynch(idGen, 1000);
-        });
-        
-        it('should return unique ids when callback is present', function () {
-            this.slow(200);
-            testWithCallback(idGen, 5000);
-        });
+  afterEach(function () {
+    clock.restore();
+  });
+
+  describe('next', function () {
+    it('should generate the proper ID', function () {
+      const flakeIdGen = new FlakeId({datacenter : 0x0F, worker : 0x1F});
+
+      const expected = '0010 0111 1011 1000 1000 1100 1010 0110 1011 0000 0001 1111 1111 0000 0000 0000';
+      const actual = biguintformat(flakeIdGen.next(), 'bin', {groupsize : 4});
+
+      expect(actual).to.be.equal(expected);
     });
-});
 
-describe('FlakeId({id:0x100})', function () {
+    it('should generate sequential IDs', function () {
+      const flakeIdGen = new FlakeId({datacenter : 0x0F, worker : 0x1F});
 
-    var idGen = new FlakeId({id:0x100});
+      const expectedFirst = '0010 0111 1011 1000 1000 1100 1010 0110 1011 0000 0001 1111 1111 0000 0000 0000';
+      const expectedSecond = '0010 0111 1011 1000 1000 1100 1010 0110 1011 0000 0001 1111 1111 0000 0000 0001';
+      const actualFirst = biguintformat(flakeIdGen.next(), 'bin', {groupsize : 4});
+      const actualSecond = biguintformat(flakeIdGen.next(), 'bin', {groupsize : 4});
 
-    describe('next', function () {
-        it('should return unique id when callback is not present', function () {
-            testSynch(idGen, 1000);
-        });
-        
-        it('should return unique ids when callback is present', function () {
-            this.slow(200);
-            testWithCallback(idGen, 5000);
-        });
+      expect(actualFirst).to.be.equal(expectedFirst);
+      expect(actualSecond).to.be.equal(expectedSecond);
     });
+  });
 });
-
-describe('FlakeId({seqMask:0x0F})', function () {
-
-    var idGen = new FlakeId({seqMask:0x0F});
-
-    describe('next', function () {
-        it('should return unique id when callback is not present', function () {
-            // Maximum unique ids depends on seqMask - 16 in this case
-            testSynch(idGen, 16);
-        });
-        
-        it('should return unique ids when callback is present', function () {
-            this.slow(200);
-            testWithCallback(idGen, 1000);
-        });
-
-        it('should throw an exception if counter has been exceeded and callback is not present', function () {
-            assert.throws(function () {
-                testSynch(idGen, 100);
-            });
-        });
-    });
-});
-
-function testSynch(generator, howMany) {
-    var ids = new Array(howMany), i;
-
-    for(i = 0; i < ids.length; i++) {
-        ids[i] = generator.next().toString('hex');
-    }
-
-    for(i = 0; i < ids.length - 1; i++) {
-        assert.notEqual(ids[i], ids[i+1]);      // Two sibling ids are not equal
-        assert.ok(ids[i] < ids[i+1]);           // Each id is greater than an id generated before
-    }
-}
-
-function testWithCallback(generator, howMany) {
-    var ids = new Array(howMany), i, index = 0;
-
-    for(i = 0; i < ids.length; i++) {
-        generator.next(function (err, id) {
-          assert.ifError(err);
-          ids[index++] = id.toString('hex');
-
-          if(index === ids.length) {
-            for(i = 0; i < ids.length - 1; i++) {
-                assert.notEqual(ids[i], ids[i+1]);      // Two sibling ids are not equal
-                assert.ok(ids[i] < ids[i+1]);           // Each id is greater than an id generated before
-            }
-          }
-        });
-    }
-}
