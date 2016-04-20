@@ -1,0 +1,2 @@
+--require test/support.js
+--ui bdd

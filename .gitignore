@@ -1,4 +1,17 @@
-.idea
-npm-debug.log
-node_modules/
+### Node ###
+# Logs:
+logs/
+*.log
+npm-debug.log*
+
+# Coverage data:
 coverage/
+
+# Dependencies:
+node_modules/
+
+### WebStorm ###
+*.iml
+
+## Directory-based project format:
+.idea/
