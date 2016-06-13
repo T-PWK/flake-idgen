@@ -3,10 +3,12 @@ Flake ID Generator
 [![Build Status](https://travis-ci.org/T-PWK/flake-idgen.svg?branch=master)](https://travis-ci.org/T-PWK/flake-idgen) 
 [![npm version](https://badge.fury.io/js/flake-idgen.svg)](http://badge.fury.io/js/flake-idgen)
 [![Dependency Status](https://gemnasium.com/T-PWK/biguint-format.svg)](https://gemnasium.com/T-PWK/biguint-format)
+[![npm downloads](https://img.shields.io/npm/dm/flake-idgen.svg)](https://www.npmjs.com/package/flake-idgen)
 [![Code Climate](https://codeclimate.com/github/T-PWK/flake-idgen/badges/gpa.svg)](https://codeclimate.com/github/T-PWK/flake-idgen)
 [![Test Coverage](https://codeclimate.com/github/T-PWK/flake-idgen/badges/coverage.svg)](https://codeclimate.com/github/T-PWK/flake-idgen)
 [![GitHub issues](https://img.shields.io/github/issues/T-PWK/flake-idgen.svg)](https://github.com/T-PWK/flake-idgen/issues)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](http://blog.tompawlak.org/mit-license)
+[![Gratipay User](https://img.shields.io/gratipay/user/T-PWK.svg?maxAge=2592000)](https://gratipay.com/~T-PWK/)
 
 Flake ID generator yields k-ordered, conflict-free ids in a distributed environment.
 
