@@ -4,7 +4,8 @@ node_js:
   - 5
   - 6
 notifications:
-  email: false
+  email: 
+    - tompwk@gmail.com
 addons:
   code_climate:
     repo_token: 21f22d9d5941a54b1a028f91a7fc75f1104c514d4f05df6a8095777d2ee58ada
