@@ -8,6 +8,9 @@ notifications:
 addons:
   code_climate:
     repo_token: 21f22d9d5941a54b1a028f91a7fc75f1104c514d4f05df6a8095777d2ee58ada
+cache:
+  directories:
+    - node_modules
 install:
   - npm install -g istanbul
   - npm install -g mocha
