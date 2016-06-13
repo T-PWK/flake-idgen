@@ -4,7 +4,10 @@ Flake ID Generator
 
 Flake ID generator yields k-ordered, conflict-free ids in a distributed environment.
 
-## Flake Numbers ##
+## Installation
+$ npm install --save flake-idgen ⏎
+
+## Flake Numbers Format ##
 
 The Flake ID is made up of: `timestamp`, `datacenter`, `worker` and `counter`. Examples in the following table: 
 ```
