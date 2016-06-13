@@ -4,7 +4,7 @@ Flake ID Generator
 
 Flake ID generator yields k-ordered, conflict-free ids in a distributed environment.
 
-## Installation
+## Installation ##
 $ npm install --save flake-idgen ⏎
 
 ## Flake Numbers Format ##
