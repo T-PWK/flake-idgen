@@ -1,4 +1,13 @@
-.idea
+# Logs
+logs/
 npm-debug.log
-node_modules/
+*.log
+
+# Coverage data
 coverage/
+
+# Dependencies
+node_modules/
+
+# IDEs
+.idea/
