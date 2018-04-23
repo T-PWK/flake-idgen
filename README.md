@@ -169,11 +169,11 @@ It would give something like:
 
 Generated id could also be converted to binary string format, split into 4 digit groups of 0's and 1's e.g.
 ```js
-var foramt = require('biguint-format')
+var intformat = require('biguint-format')
     , idGen = new (require('flake-idgen'))
 
 for (var i = 0; i < 5; i++) {
-	console.info(format(idGen.next(), 'bin', { groupsize: 4 }));
+	console.info(intformat(idGen.next(), 'bin', { groupsize: 4 }));
 };
 ```
 
