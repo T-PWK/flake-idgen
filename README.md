@@ -2,13 +2,11 @@ Flake ID Generator
 ===========
 [![Build Status](https://travis-ci.org/T-PWK/flake-idgen.svg?branch=master)](https://travis-ci.org/T-PWK/flake-idgen) 
 [![npm version](https://badge.fury.io/js/flake-idgen.svg)](http://badge.fury.io/js/flake-idgen)
-[![Dependency Status](https://gemnasium.com/T-PWK/biguint-format.svg)](https://gemnasium.com/T-PWK/biguint-format)
 [![npm downloads](https://img.shields.io/npm/dm/flake-idgen.svg)](https://www.npmjs.com/package/flake-idgen)
 [![Code Climate](https://codeclimate.com/github/T-PWK/flake-idgen/badges/gpa.svg)](https://codeclimate.com/github/T-PWK/flake-idgen)
-[![Test Coverage](https://codeclimate.com/github/T-PWK/flake-idgen/badges/coverage.svg)](https://codeclimate.com/github/T-PWK/flake-idgen)
+[![Coverage Status](https://coveralls.io/repos/github/T-PWK/go-flakeid/badge.svg?branch=master)](https://coveralls.io/github/T-PWK/go-flakeid?branch=master)
 [![GitHub issues](https://img.shields.io/github/issues/T-PWK/flake-idgen.svg)](https://github.com/T-PWK/flake-idgen/issues)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](http://blog.tompawlak.org/mit-license)
-[![Gratipay User](https://img.shields.io/gratipay/user/T-PWK.svg?maxAge=2592000)](https://gratipay.com/~T-PWK/)
 
 Flake ID generator yields k-ordered, conflict-free ids in a distributed environment.
 
@@ -41,7 +39,7 @@ The Flake ID is made up of: `timestamp`, `datacenter`, `worker` and `counter`. E
 As you can see, each Flake ID is 64 bits long, consisting of:
 * `timestamp`, a 42 bit long number of milliseconds elapsed since 1 January 1970 00:00:00 UTC 
 * `datacenter`, a 5 bit long datacenter identifier. It can take up to 32 unique values (including 0)
-* `worker`, a 5 bit long worker indentifier. It can take up to 32 unique values (including 0)
+* `worker`, a 5 bit long worker identifier. It can take up to 32 unique values (including 0)
 * `counter`, a 12 bit long counter of ids in the same millisecond. It can take up to 4096 unique values. 
 
 Breakdown of bits for an id e.g. `5828128208445124608` (counter is `0`, datacenter is `7` and worker `3`) is as follows:
@@ -60,7 +58,7 @@ Note that composition of `datacenter id` and `worker id` makes 1024 unique gener
 
 Flake ID Generator returns 8 byte long node [Buffer](http://nodejs.org/api/buffer.html) objects with its bytes representing 64 bit long id. Note that the number is stored in Big Endian format i.e. the most significant byte of the number is stored in the smallest address given and the least significant byte is stored in the largest.
 
-Flake id generator instace has one method `next(cb)` returning generated id (if a callback function is not provided) or calling provided callback function with two arguments: `error` and `generated id`.
+Flake id generator instance has one method `next(cb)` returning generated id (if a callback function is not provided) or calling provided callback function with two arguments: `error` and `generated id`.
 
 The following example uses `next` with no callback function:
 
@@ -103,7 +101,7 @@ It would give something like:
 Flake Id generator constructor takes optional parameter (generator configuration options) with the following properties:
 * `datacenter` (5 bit) - datacenter identifier. It can have values from 0 to 31.
 * `worker` (5 bit) - worker identifier. It can have values from 0 to 31.
-* `id` (10 bit) - gnerator identifier. It can have values from 0 to 1023. It can be provided instead of `datacenter` and `worker` identifiers.
+* `id` (10 bit) - generator identifier. It can have values from 0 to 1023. It can be provided instead of `datacenter` and `worker` identifiers.
 * `epoch` - number used to reduce value of a generated timestamp. Note that this number should not exceed number of milliseconds elapsed since 1 January 1970 00:00:00 UTC. It can be used to generate _smaller_ ids.
 
 Example of using `datacenter` and `worker` identifiers:
@@ -187,10 +185,10 @@ It would give something like:
 ```
 
 ## Author ##
-Writen by Tom Pawlak - [Blog](http://blog.tompawlak.org)
+Written by Tom Pawlak - [Blog](https://blog.abelotech.com)
 
 ## License ##
 
 Copyright (c) 2014 Tom Pawlak
 
-MIT License : http://blog.tompawlak.org/mit-license
+MIT License : https://blog.abelotech.com/mit-license/
