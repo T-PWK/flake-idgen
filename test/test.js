@@ -1,90 +1,147 @@
-"use strict";
+'use strict'
 
-var assert  = require('assert'),
-    FlakeId = require('../flake-id-gen');
+var assert = require('assert'),
+  FlakeId = require('../flake-id-gen')
 
 describe('FlakeId', function () {
+  var idGen = new FlakeId()
 
-    var idGen = new FlakeId();
+  describe('next', function () {
+    it('should return unique id when callback is not present', function () {
+      testSynch(idGen, 1000)
+    })
 
-    describe('next', function () {
-        it('should return unique id when callback is not present', function () {
-            testSynch(idGen, 1000);
-        });
-        
-        it('should return unique ids when callback is present', function () {
-            this.slow(200);
-            testWithCallback(idGen, 5000);
-        });
-    });
-});
+    it('should return unique ids when callback is present', function () {
+      this.slow(200)
+      testWithCallback(idGen, 5000)
+    })
+  })
+
+  describe('property id', function () {
+    it('should return default value (0)', function () {
+      assert.equal(idGen.id, 0)
+    })
+  })
+
+  describe('property datacenter', function () {
+    it('should return default value (0)', function () {
+      assert.equal(idGen.datacenter, 0)
+    })
+  })
+
+  describe('property worker', function () {
+    it('should return defaulted value (0)', function () {
+      assert.equal(idGen.worker, 0)
+    })
+  })
+})
 
 describe('FlakeId({id:0x100})', function () {
+  var idGen = new FlakeId({ id: 0x100 })
 
-    var idGen = new FlakeId({id:0x100});
+  describe('next', function () {
+    it('should return unique id when callback is not present', function () {
+      testSynch(idGen, 1000)
+    })
+    it('should return unique ids when callback is present', function () {
+      this.slow(200)
+      testWithCallback(idGen, 5000)
+    })
+  })
 
-    describe('next', function () {
-        it('should return unique id when callback is not present', function () {
-            testSynch(idGen, 1000);
-        });
-        
-        it('should return unique ids when callback is present', function () {
-            this.slow(200);
-            testWithCallback(idGen, 5000);
-        });
-    });
-});
+  describe('property id', function () {
+    it('should return id value used to create generator', function () {
+      assert.equal(idGen.id, 0x100)
+    })
+  })
+
+  describe('property datacenter', function () {
+    it("should return 'undefined'", function () {
+      assert.equal(typeof idGen.datacenter, 'undefined')
+    })
+  })
+
+  describe('property worker', function () {
+    it("should return 'undefined'", function () {
+      assert.equal(typeof idGen.worker, 'undefined')
+    })
+  })
+})
 
 describe('FlakeId({seqMask:0x0F})', function () {
+  var idGen = new FlakeId({ seqMask: 0x0f })
 
-    var idGen = new FlakeId({seqMask:0x0F});
+  describe('next', function () {
+    it('should return unique id when callback is not present', function () {
+      // Maximum unique ids depends on seqMask - 16 in this case
+      testSynch(idGen, 16)
+    })
 
-    describe('next', function () {
-        it('should return unique id when callback is not present', function () {
-            // Maximum unique ids depends on seqMask - 16 in this case
-            testSynch(idGen, 16);
-        });
-        
-        it('should return unique ids when callback is present', function () {
-            this.slow(200);
-            testWithCallback(idGen, 1000);
-        });
+    it('should return unique ids when callback is present', function () {
+      this.slow(200)
+      testWithCallback(idGen, 1000)
+    })
 
-        it('should throw an exception if counter has been exceeded and callback is not present', function () {
-            assert.throws(function () {
-                testSynch(idGen, 100);
-            });
-        });
-    });
-});
+    it('should throw an exception if counter has been exceeded and callback is not present', function () {
+      assert.throws(function () {
+        testSynch(idGen, 100)
+      })
+    })
+  })
+})
+
+describe('FlakeId({datacenter: 0x0A, worker: 0x15})', function () {
+  var idGen = new FlakeId({ datacenter: 0x0a, worker: 0x15 })
+
+  describe('id property', function () {
+    it('should return value generated from datacenter and worker', function () {
+      assert.equal(idGen.id, 0x155)
+    })
+  })
+
+  describe('datacenter property', function () {
+    it('should return datacenter number used to create generator', function () {
+      assert.equal(idGen.datacenter, 10)
+    })
+  })
+
+  describe('worker property', function () {
+    it('should return worker number used to create generator', function () {
+      assert.equal(idGen.worker, 21)
+    })
+  })
+})
 
 function testSynch(generator, howMany) {
-    var ids = new Array(howMany), i;
+  var ids = new Array(howMany),
+    i
 
-    for(i = 0; i < ids.length; i++) {
-        ids[i] = generator.next().toString('hex');
-    }
+  for (i = 0; i < ids.length; i++) {
+    ids[i] = generator.next().toString('hex')
+  }
 
-    for(i = 0; i < ids.length - 1; i++) {
-        assert.notEqual(ids[i], ids[i+1]);      // Two sibling ids are not equal
-        assert.ok(ids[i] < ids[i+1]);           // Each id is greater than an id generated before
-    }
+  for (i = 0; i < ids.length - 1; i++) {
+    assert.notEqual(ids[i], ids[i + 1]) // Two sibling ids are not equal
+    assert.ok(ids[i] < ids[i + 1]) // Each id is greater than an id generated before
+  }
 }
 
 function testWithCallback(generator, howMany) {
-    var ids = new Array(howMany), i, index = 0;
+  var ids = new Array(howMany),
+    i,
+    index = 0
 
-    for(i = 0; i < ids.length; i++) {
-        generator.next(function (err, id) {
-          assert.ifError(err);
-          ids[index++] = id.toString('hex');
+  for (i = 0; i < ids.length; i++) {
+    generator.next(function (err, id) {
+      assert.ifError(err)
+      ids[index++] = id.toString('hex')
 
-          if(index === ids.length) {
-            for(i = 0; i < ids.length - 1; i++) {
-                assert.notEqual(ids[i], ids[i+1]);      // Two sibling ids are not equal
-                assert.ok(ids[i] < ids[i+1]);           // Each id is greater than an id generated before
-            }
-          }
-        });
-    }
+      if (index === ids.length) {
+        for (i = 0; i < ids.length - 1; i++) {
+          assert.notEqual(ids[i], ids[i + 1]) // Two sibling ids are not equal
+          assert.ok(ids[i] < ids[i + 1]) // Each id is greater than an id generated before
+        }
+      }
+    })
+  }
 }

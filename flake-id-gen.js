@@ -23,9 +23,12 @@
             /*jslint bitwise: true */
             this.id = this.options.id & 0x3FF;
         } else {
-            this.id = ((this.options.datacenter || 0) & 0x1F) << 5 | ((this.options.worker || 0) & 0x1F);
+            this.datacenter = (this.options.datacenter || 0) & 0x1F;
+            this.worker = (this.options.worker || 0) & 0x1F;
+            this.id = (this.datacenter) << 5 | this.worker;
         }
-        this.id <<= 12;  // id generator identifier - will not change while generating ids
+        this.genId = this.id;
+        this.genId <<= 12;  // id generator identifier - will not change while generating ids
         this.epoch = +this.options.epoch || 0;
         this.seq = 0;
         this.lastTime = 0;
@@ -87,7 +90,7 @@
             }
             this.lastTime = time;
 
-            id.writeUInt32BE(((time & 0x3) << 22) | this.id | this.seq, 4);
+            id.writeUInt32BE(((time & 0x3) << 22) | this.genId | this.seq, 4);
             id.writeUInt8(Math.floor(time / 4) & 0xFF, 4);
             id.writeUInt16BE(Math.floor(time / FlakeId.POW10) & 0xFFFF, 2);
             id.writeUInt16BE(Math.floor(time / FlakeId.POW26) & 0xFFFF, 0);
