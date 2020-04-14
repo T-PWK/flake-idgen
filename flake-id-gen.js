@@ -51,8 +51,14 @@
            * @param {Buffer} id - Generated id
            */
 
-            var id = new Buffer(8), time = Date.now() - this.epoch;
-            id.fill(0);
+            var id;
+            if (Buffer.alloc) {
+                id = Buffer.alloc(8);
+            } else {
+                id = new Buffer(8);
+                id.fill(0);
+            }
+            var time = Date.now() - this.epoch;
 
             // Generates id in the same millisecond as the previous id
             if (time === this.lastTime) {
