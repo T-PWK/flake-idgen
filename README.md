@@ -138,6 +138,50 @@ It would give something like:
 <Buffer 05 32 58 8e d2 40 00 00>
 ```
 
+### Properties ###
+Flake Id generator has some properties that can be read from a generator instance:
+* `datacenter` - returns worker number used for generator creation; otherwise it returns `undefined` value.
+* `worker` - returns worker number used for generator creation; otherwise it returns `undefined` value.
+* `id` - returns worker identifier number used for generator creation or combines its value from datacenter and worker numbers. Identifier is always available and it is defaulted to zero.
+
+Flake Id generator instantiated without any parameter gets `datacenter`, `worker` and `id` values defaulted to zeros.
+
+```js
+var FlakeId = require('flake-idgen')
+
+var flakeIdGen1 = new FlakeId({ id: 100 });
+var flakeIdGen2 = new FlakeId({ datacenter: 9, worker: 7 });
+var flakeIdGen3 = new FlakeId();
+
+console.info(flakeIdGen1.id);           // 100
+console.info(flakeIdGen1.datacenter);   // undefined
+console.info(flakeIdGen1.worker);       // undefined
+
+console.info(flakeIdGen2.datacenter);   // 9
+console.info(flakeIdGen2.worker);       // 7
+console.info(flakeIdGen2.id);           // 259
+
+console.info(flakeIdGen3.datacenter);   // 0
+console.info(flakeIdGen3.worker);       // 0
+console.info(flakeIdGen3.id);           // 0
+```
+
+It would give something like:
+
+```js
+100
+undefined
+undefined
+
+9
+7
+295
+
+0
+0
+0
+```
+
 ### Formatting ###
 
 Flake Id generator returns node Buffer representing 64-bit number for the sake of future extensions or returned buffer modifications. Node Buffer can also be very easily converted to string format. There is a NPM [biguint-format](https://npmjs.org/package/biguint-format) module which provides Buffer to string conversion functionality e.g.
