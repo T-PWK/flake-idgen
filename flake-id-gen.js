@@ -64,6 +64,13 @@
             var time = Date.now() - this.epoch;
 
             // Generates id in the same millisecond as the previous id
+            if (time < this.lastTime) {
+                if (cb) {
+                    setTimeout(self.next.bind(self, cb), this.lastTime - time);
+                    return;
+                }
+                throw new Error(`Clock moved backwards. Refusing to generate id for ${this.lastTime - time} milliseconds`);
+            }
             if (time === this.lastTime) {
 
                 // If all sequence values (4096 unique values including 0) have been used

@@ -98,6 +98,12 @@ It would give something like:
 <Buffer 50 dd d6 49 f0 00 00 00>
 ```
 
+### Counter overflow ###
+Flake ID Generator can generate up to 4096 unique identifiers within a millisecond. When generator tries to generate more than 4096 identifiers within a millisecond, the following things will happen:
+* When using `next()` without a callback function, an error is thrown.
+* When using `next(cb)` with a callback function, the callback function is called in the following millisecond without any error.
+
+### Additional generator setup parameters ###
 Flake Id generator constructor takes optional parameter (generator configuration options) with the following properties:
 * `datacenter` (5 bit) - datacenter identifier. It can have values from 0 to 31.
 * `worker` (5 bit) - worker identifier. It can have values from 0 to 31.
@@ -182,7 +188,12 @@ undefined
 0
 ```
 
-### Formatting ###
+### Clock moving backward ###
+From time to time Node.js clock may move backward. In most cases it is only a few millisecond. However, as the generator relies on current timestamp, it won't be able to generate conflict-free identifiers (i.e. without duplicates) until the clock catches up with the last timestamp value. In case of clock move backward the following things will happen:
+* When using `next()` without a callback function, an error is thrown.
+* When using `next(cb)` with a callback function, the callback function is called with a new identifier generated once the clock catches up with the last timestamp.
+
+## Formatting ##
 
 Flake Id generator returns node Buffer representing 64-bit number for the sake of future extensions or returned buffer modifications. Node Buffer can also be very easily converted to string format. There is a NPM [biguint-format](https://npmjs.org/package/biguint-format) module which provides Buffer to string conversion functionality e.g.
 
