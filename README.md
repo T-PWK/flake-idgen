@@ -146,7 +146,7 @@ It would give something like:
 
 ### Properties ###
 Flake Id generator has some properties that can be read from a generator instance:
-* `datacenter` - returns worker number used for generator creation; otherwise it returns `undefined` value.
+* `datacenter` - returns datacenter number used for generator creation; otherwise it returns `undefined` value.
 * `worker` - returns worker number used for generator creation; otherwise it returns `undefined` value.
 * `id` - returns worker identifier number used for generator creation or combines its value from datacenter and worker numbers. Identifier is always available and it is defaulted to zero.
 
